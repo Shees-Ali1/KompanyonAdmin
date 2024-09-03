@@ -65,7 +65,6 @@ class _AssessmentsState extends State<Assessments> {
       String assessmentId, String question, List<dynamic> options) {
     TextEditingController questionController =
     TextEditingController(text: question);
-    TextEditingController optionController = TextEditingController();
     List<String> dialogOptions = List.from(options);
 
     showDialog(
@@ -74,7 +73,6 @@ class _AssessmentsState extends State<Assessments> {
         return EditAssessmentDialog(
           assessmentId: assessmentId,
           questionController: questionController,
-          optionController: optionController,
           options: dialogOptions,
         );
       },
@@ -103,6 +101,9 @@ class _AssessmentsState extends State<Assessments> {
                 padding:
                 const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 textStyle: const TextStyle(fontSize: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -234,6 +235,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Assessment added successfully')),
       );
+      Navigator.of(context).pop(); // Close the dialog
     } catch (e) {
       print('Error adding assessment: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -245,6 +247,9 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
       title: const Text('Add New Assessment'),
       content: SingleChildScrollView(
         child: SizedBox(
@@ -259,8 +264,10 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                 decoration: const InputDecoration(
                   labelText: 'Question',
                   labelStyle: TextStyle(color: Colors.teal),
+                  border: OutlineInputBorder(),
                 ),
               ),
+              const SizedBox(height: 10),
               for (int i = 0; i < _options.length; i++)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
@@ -274,6 +281,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                       decoration: const InputDecoration(
                         labelText: 'Option',
                         labelStyle: TextStyle(color: Colors.teal),
+                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -287,15 +295,15 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
               const SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    _addAssessment();
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: _addAssessment,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 24),
                     textStyle: const TextStyle(fontSize: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: const Text('Add Assessment'),
                 ),
@@ -308,17 +316,14 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
     );
   }
 }
-
 class EditAssessmentDialog extends StatefulWidget {
   final String assessmentId;
   final TextEditingController questionController;
-  final TextEditingController optionController;
   final List<String> options;
 
   const EditAssessmentDialog({
     required this.assessmentId,
     required this.questionController,
-    required this.optionController,
     required this.options,
     super.key,
   });
@@ -329,33 +334,42 @@ class EditAssessmentDialog extends StatefulWidget {
 
 class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final List<String> _updatedOptions = [];
+  late List<TextEditingController> _optionControllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _optionControllers = widget.options
+        .map((option) => TextEditingController(text: option))
+        .toList();
+  }
 
   void _addOption() {
-    if (widget.optionController.text.isNotEmpty) {
-      setState(() {
-        _updatedOptions.add(widget.optionController.text);
-        widget.optionController.clear();
-      });
-    }
+    setState(() {
+      _optionControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeOption(int index) {
+    setState(() {
+      _optionControllers.removeAt(index);
+    });
   }
 
   Future<void> _updateAssessment() async {
+    List<String> updatedOptions =
+    _optionControllers.map((controller) => controller.text).toList();
+
     try {
-      await _firestore
-          .collection('assessments')
-          .doc(widget.assessmentId)
-          .update({
+      await _firestore.collection('assessments').doc(widget.assessmentId).update({
         'question': widget.questionController.text,
-        'options': _updatedOptions.isEmpty
-            ? widget.options.cast<String>()
-            : _updatedOptions, // Update options if any changes
+        'options': updatedOptions,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Assessment updated successfully')),
       );
-      Navigator.of(context).pop(); // Close the dialog
+      Navigator.of(context).pop();
     } catch (e) {
       print('Error updating assessment: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -367,55 +381,96 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit Assessment'),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      title: const Text(
+        'Edit Assessment',
+        style: TextStyle(color: Colors.blueAccent),
+      ),
       content: SingleChildScrollView(
-        child: SizedBox(
-          height: 400,
-          width: 700,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: widget.questionController,
-                decoration: const InputDecoration(labelText: 'Question'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: widget.questionController,
+              decoration: InputDecoration(
+                labelText: 'Question',
+                labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent.shade700),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              for (int i = 0; i < widget.options.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text('${i + 1}. ${widget.options[i]}'),
-                ),
-              for (int i = 0; i < _updatedOptions.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text('${i + 1}. ${_updatedOptions[i]}'),
-                ),
-              Row(
+            ),
+            const SizedBox(height: 10),
+            ..._optionControllers.asMap().entries.map((entry) {
+              int index = entry.key;
+              TextEditingController optionController = entry.value;
+
+              return Row(
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: widget.optionController,
-                      decoration: const InputDecoration(labelText: 'Option'),
+                      controller: optionController,
+                      decoration: InputDecoration(
+                        labelText: 'Option ${index + 1}',
+                        labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent.shade700),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
                   ),
                   IconButton(
-                    onPressed: _addOption,
-                    icon: const Icon(Icons.add),
+                    onPressed: () => _removeOption(index),
+                    icon: Icon(Icons.delete, color: Colors.redAccent),
                   ),
                 ],
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _updateAssessment,
-                  child: const Text('Update Assessment'),
+              );
+            }).toList(),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _addOption,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent.shade700,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Add Option'),
                 ),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: Colors.redAccent),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: _updateAssessment,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent.shade700,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          child: const Text('Update Assessment'),
+        ),
+      ],
     );
   }
 }
