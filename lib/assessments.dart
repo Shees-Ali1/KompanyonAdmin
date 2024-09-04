@@ -1,3 +1,6 @@
+import 'package:admin_panel_komp/colors.dart';
+import 'package:admin_panel_komp/custom_buuton.dart';
+import 'package:admin_panel_komp/custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +28,7 @@ class _AssessmentsState extends State<Assessments> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Assessment'),
+          title: const AsulCustomText(text: 'Delete Assessment'),
           content:
           const Text('Are you sure you want to delete this assessment?'),
           actions: <Widget>[
@@ -82,113 +85,103 @@ class _AssessmentsState extends State<Assessments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Assessments Admin Panel'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _showAddAssessmentDialog,
-              icon: const Icon(Icons.add),
-              label:  Text('Add Assessment',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade600,
-                padding:
-                const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                textStyle: const TextStyle(fontSize: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+
+          ElevatedButton.icon(
+            onPressed: _showAddAssessmentDialog,
+            icon: const Icon(Icons.add,color: Colors.white,),
+            label:  Text('Add Assessment',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+            style: ElevatedButton.styleFrom(
+              backgroundColor:primaryColorKom,
+              padding:
+              const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+              textStyle: const TextStyle(fontSize: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('assessments').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Error fetching assessments');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection('assessments').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Error fetching assessments');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-                  final assessments = snapshot.data!.docs;
-                  return ListView.builder(
-                    itemCount: assessments.length,
-                    itemBuilder: (context, index) {
-                      final assessmentData =
-                      assessments[index].data() as Map<String, dynamic>;
-                      final assessmentId = assessments[index].id; // Get the ID
-                      final options =
-                      (assessmentData['options'] as List).cast<String>();
-
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        elevation: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                assessmentData['question'],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.blue.shade600,
-                                ),
+                final assessments = snapshot.data!.docs;
+                return ListView.builder(
+                  itemCount: assessments.length,
+                  itemBuilder: (context, index) {
+                    final assessmentData =
+                    assessments[index].data() as Map<String, dynamic>;
+                    final assessmentId = assessments[index].id; // Get the ID
+                    final options =
+                    (assessmentData['options'] as List).cast<String>();
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      elevation: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AsulCustomText(
+                            text:   assessmentData['question'],
+                             fontsize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            const SizedBox(height: 8),
+                            ...options.map((option) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                '• $option',
+                                style: const TextStyle(fontSize: 16),
                               ),
-                              const SizedBox(height: 8),
-                              ...options.map((option) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  '• $option',
-                                  style: const TextStyle(fontSize: 16),
+                            )),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    _deleteAssessment(assessmentId);
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.redAccent,
                                 ),
-                              )),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      _deleteAssessment(assessmentId);
-                                    },
-                                    icon: const Icon(Icons.delete),
-                                    color: Colors.redAccent,
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _showEditAssessmentDialog(
-                                        assessmentId,
-                                        assessmentData['question'],
-                                        assessmentData['options'],
-                                      );
-                                    },
-                                    icon: const Icon(Icons.edit),
-                                    color: Colors.blueAccent,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                IconButton(
+                                  onPressed: () {
+                                    _showEditAssessmentDialog(
+                                      assessmentId,
+                                      assessmentData['question'],
+                                      assessmentData['options'],
+                                    );
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                  color: primaryColorKom,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -250,7 +243,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title:  Text('Add New Assessment',style: TextStyle(color: Colors.blue.shade600),),
+      title:  AsulCustomText(text: 'Add New Assessment',),
       content: SingleChildScrollView(
         child: SizedBox(
           height: 400,
@@ -263,7 +256,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                 controller: _questionController,
                 decoration: const InputDecoration(
                   labelText: 'Question',
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -280,7 +273,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                       controller: _optionController,
                       decoration: const InputDecoration(
                         labelText: 'Option',
-                        labelStyle: TextStyle(color: Colors.white),
+                        labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -297,7 +290,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                 child: ElevatedButton(
                   onPressed: _addAssessment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade600,
+                    backgroundColor:primaryColorKom,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 24),
                     textStyle: const TextStyle(fontSize: 16),
@@ -388,9 +381,9 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      title: const Text(
-        'Edit Assessment',
-        style: TextStyle(color: Colors.blueAccent),
+      title: const AsulCustomText(
+       text:  'Edit Assessment',
+
       ),
       content: SingleChildScrollView(
         child: Container(
@@ -415,7 +408,6 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
               ..._optionControllers.asMap().entries.map((entry) {
                 int index = entry.key;
                 TextEditingController optionController = entry.value;
-
                 return Row(
                   children: [
                     Expanded(
@@ -441,16 +433,7 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: _addOption,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade600,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text('Add Option',style: TextStyle(color: Colors.white),),
-                  ),
+                  CustomButton(text: 'Add Option', onPressed:_addOption,height: 35,width: 100,)
                 ],
               ),
             ],
@@ -470,7 +453,7 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
         ElevatedButton(
           onPressed: _updateAssessment,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue.shade600,
+            backgroundColor:primaryColorKom,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
