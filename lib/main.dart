@@ -26,10 +26,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Kompanyon Admin',
 
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: bgColor,
-        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme)
-            .apply(bodyColor: Colors.white),
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: backgroundColor,
+
         canvasColor: secondaryColor,
       ),
       getPages: const [],

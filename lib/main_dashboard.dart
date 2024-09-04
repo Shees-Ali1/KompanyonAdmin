@@ -1,5 +1,6 @@
 import 'package:admin_panel_komp/assessments.dart';
-import 'package:admin_panel_komp/dashboard.dart';
+import 'package:admin_panel_komp/colors.dart';
+
 import 'package:admin_panel_komp/header.dart';
 import 'package:admin_panel_komp/user_details.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class _MainDashboardState extends State<MainDashboard> {
                         padding: const EdgeInsets.only(left: 20.0, top: 10),
                         child: Column(
                           children: [
+
                             SizedBox(
                               width: 200,
                               child: ElevatedButton(
@@ -48,36 +50,8 @@ class _MainDashboardState extends State<MainDashboard> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: _selectedIndex == 0
-                                        ? Colors.blue.shade600
-                                        : Colors.grey.shade600,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12))),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text('Dashboard',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 19)),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            SizedBox(
-                              width: 200,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _selectedIndex = 1;
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: _selectedIndex == 1
-                                        ? Colors.blue.shade600
-                                        : Colors.grey.shade600,
+                                        ?primaryColorKom
+                                        :  primaryColorKom.withOpacity(0.1),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12))),
@@ -99,13 +73,13 @@ class _MainDashboardState extends State<MainDashboard> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    _selectedIndex = 2;
+                                    _selectedIndex = 1;
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: _selectedIndex == 2
-                                        ? Colors.blue.shade600
-                                        : Colors.grey.shade600,
+                                    backgroundColor: _selectedIndex == 1
+                                        ? primaryColorKom
+                                        :  primaryColorKom.withOpacity(0.1),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12))),
@@ -125,16 +99,8 @@ class _MainDashboardState extends State<MainDashboard> {
                       const SizedBox(
                         width: 15,
                       ),
+
                       if (_selectedIndex == 0)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width / 1.3,
-                            child: const Dashboard(),
-                          ),
-                        ),
-                      if (_selectedIndex == 1)
                         Column(
                           children: [
                             SizedBox(
@@ -144,7 +110,7 @@ class _MainDashboardState extends State<MainDashboard> {
                             ),
                           ],
                         ),
-                      if (_selectedIndex == 2)
+                      if (_selectedIndex == 1)
                         Column(
                           children: [
                             SizedBox(

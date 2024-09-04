@@ -1,4 +1,4 @@
-
+import 'package:admin_panel_komp/custom_text.dart';
 import 'package:admin_panel_komp/responsive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,17 +19,19 @@ class Header extends StatelessWidget {
       child: Row(
         children: [
           if (!Responsive.isDesktop(context))
-            IconButton(icon: Icon(Icons.menu), onPressed: () {}
-            ),
+            IconButton(icon: Icon(Icons.menu), onPressed: () {}),
           if (!Responsive.isMobile(context))
             Row(
               children: [
-                Text(
-                  "Kompanyon",
-                  style: Theme.of(context).textTheme.titleLarge,
+                SizedBox(
+                    height: 80,
+                    width: 250,
+                    child: Image.asset(
+                      'assets/images/bgName.png',
+                    )),
+                SizedBox(
+                  width: 30,
                 ),
-                SizedBox(width: 30,),
-
               ],
             ),
 
@@ -59,15 +61,18 @@ class _ProfileCardState extends State<ProfileCard> {
   String userImage = '';
 
   @override
-  void initState () {
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       asyncInitState();
     });
   }
 
   asyncInitState() async {
-    DocumentSnapshot user = await firestore.collection('userDetails').doc(auth.currentUser!.uid).get();
+    DocumentSnapshot user = await firestore
+        .collection('userDetails')
+        .doc(auth.currentUser!.uid)
+        .get();
     setState(() {
       userName = user['name'];
       userImage = user['profileImageUrl'];
@@ -103,9 +108,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          LoginPage()),
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
             ),
@@ -124,7 +127,7 @@ class _ProfileCardState extends State<ProfileCard> {
         vertical: defaultPadding / 2,
       ),
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: primaryColorKom.withOpacity(0.1),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: Colors.white10),
       ),
@@ -138,20 +141,24 @@ class _ProfileCardState extends State<ProfileCard> {
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      image: NetworkImage(userImage),
-                      fit: BoxFit.cover)),
+                      image: NetworkImage(userImage), fit: BoxFit.cover)),
             ),
             if (!Responsive.isMobile(context))
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+                    const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
                 child: Row(
                   children: [
-                    Text(userName!),
+                    AsulCustomText(
+                      text: userName!,
+                    ),
                     SizedBox(
                       width: 10,
                     ),
-                    Icon(Icons.logout_outlined),
+                    Icon(
+                      Icons.logout_outlined,
+                      color: primaryColorKom,
+                    ),
                   ],
                 ),
               ),

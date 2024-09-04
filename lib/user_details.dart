@@ -3,9 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
+import 'custom_buuton.dart';
+import 'custom_search.dart';
+import 'custom_text.dart';
 
 class UserDetails extends StatefulWidget {
-   UserDetails({super.key});
+  UserDetails({super.key});
 
   @override
   State<UserDetails> createState() => _UserDetailsState();
@@ -13,8 +16,7 @@ class UserDetails extends StatefulWidget {
 
 class _UserDetailsState extends State<UserDetails> {
   String searchQuery = '';
- late Stream<QuerySnapshot> stream;
-
+  late Stream<QuerySnapshot> stream;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -26,62 +28,6 @@ class _UserDetailsState extends State<UserDetails> {
   final TextEditingController _roleController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> _addUser() async {
-    // Validate input fields
-    if (_nameController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all fields')),
-      );
-      return;
-    }
-
-    if (_passwordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
-      return;
-    }
-
-    try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      final uid = userCredential.user?.uid;
-      if (uid != null) {
-        await _firestore.collection('userDetails').doc(uid).set({
-          'name': _nameController.text,
-          'email': _emailController.text,
-          'password': _passwordController.text,
-          'uid': uid,
-          'role': _roleController.text,
-        });
-
-        _nameController.clear();
-        _emailController.clear();
-        _passwordController.clear();
-        _confirmPasswordController.clear();
-        _roleController.clear();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User added successfully')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error creating user')),
-        );
-      }
-    } catch (e) {
-      print('Error adding user: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error adding user')),
-      );
-    }
-  }
-
   Future<void> _deleteUser(String userId) async {
     bool? shouldDelete = await showDialog<bool>(
       context: context,
@@ -90,14 +36,21 @@ class _UserDetailsState extends State<UserDetails> {
           title: const Text('Confirm Delete'),
           content: const Text('Are you sure you want to delete this user?'),
           actions: [
-            TextButton(
+            CustomButton(
+              color: Colors.transparent,
+              width: 100,
+              height: 40,
+              text: 'Cancel',
+              textColor: Colors.red,
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
             ),
-            TextButton(
+            CustomButton(
+              width: 100,
+              height: 40,
+              text: 'Delete',
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Delete'),
             ),
+
           ],
         );
       },
@@ -120,88 +73,99 @@ class _UserDetailsState extends State<UserDetails> {
 
   Future<void> _editUser(String userId, String currentName, String currentEmail,
       String currentRole) async {
-    String updatedName = currentName;
-    String updatedEmail = currentEmail;
+    String? updatedName = currentName;
+    String? updatedEmail = currentEmail;
     String selectedRole = currentRole;
 
     await showDialog(
-
       context: context,
       builder: (context) {
         return AlertDialog(
-
-          backgroundColor: secondaryColor,
+          backgroundColor: backgroundColor,
           title: const Text('Edit User'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: TextEditingController(text: currentName),
-                onChanged: (value) {
-                  updatedName = value;
-                },
-                decoration: const InputDecoration(labelText: 'Name'),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                controller: TextEditingController(text: currentEmail),
-                onChanged: (value) {
-                  updatedEmail = value;
-                },
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  // fillColor: Colors.white,
-                  // /filled: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 10.0,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: secondaryColor),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: secondaryColor),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: secondaryColor),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
+          content: SizedBox(
+            height: 200,
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InputField(
+                  onChanged: (value) {
+                    updatedName = value;
+                  },
+                  hint: 'Email',
+                  keyboard: TextInputType.text,
+                  controller: TextEditingController(text: currentName),
                 ),
-                hint: Text(
-                  '[role]',
-                  style: TextStyle(color: primaryColor),
+                SizedBox(
+                  height: 20,
                 ),
-                value: selectedRole,
-                onChanged: (String? newValue) {
-                  selectedRole = newValue ?? currentRole;
-                },
-                items: <String>['Admin', 'User', 'Guest']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
+                InputField(
+                  onChanged: (value) {
+                    updatedEmail = value;
+                  },
+                  hint: 'Email',
+                  keyboard: TextInputType.text,
+                  controller: TextEditingController(text: currentEmail),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                DropdownButtonFormField<String>(
+                  dropdownColor: backgroundColor,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 10.0,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: primaryColorKom),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: primaryColorKom),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: primaryColorKom),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                  hint: AsulCustomText(
+                    text: '[role]',
+                  ),
+                  value: selectedRole,
+                  onChanged: (String? newValue) {
+                    selectedRole = newValue ?? currentRole;
+                  },
+                  items: <String>['Admin', 'User', 'Guest']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: AsulCustomText(text: value),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
           ),
           actions: [
-            TextButton(
+            CustomButton(
+              color: Colors.transparent,
+              width: 100,
+              height: 40,
+              text: 'Cancel',
+              textColor: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
             ),
-            TextButton(
+            CustomButton(
+              width: 100,
+              height: 40,
+              text: 'Update',
               onPressed: () async {
                 await _firestore.collection('userDetails').doc(userId).update({
                   'name': updatedName,
@@ -213,7 +177,6 @@ class _UserDetailsState extends State<UserDetails> {
                   const SnackBar(content: Text('User updated successfully')),
                 );
               },
-              child: const Text('Update'),
             ),
           ],
         );
@@ -225,8 +188,7 @@ class _UserDetailsState extends State<UserDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    stream =_firestore.collection('userDetails').snapshots();
-
+    stream = _firestore.collection('userDetails').snapshots();
   }
 
   @override
@@ -249,25 +211,21 @@ class _UserDetailsState extends State<UserDetails> {
                   });
                 },
                 decoration: InputDecoration(
-                  hintText: "Search",
-                  fillColor: secondaryColor,
+                  hintText: 'Search',
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16.0,
+                  ),
+                  fillColor: Colors.white,
                   filled: true,
                   border: const OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
-                  suffixIcon: Container(
-                    padding: const EdgeInsets.all(defaultPadding * 0.75),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: defaultPadding / 2),
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: secondaryColor,
+                    size: 26,
                   ),
                 ),
               ),
@@ -279,32 +237,26 @@ class _UserDetailsState extends State<UserDetails> {
                 children: [
                   SizedBox(width: 100),
                   Expanded(
-                    child: Text(
-                      'Name',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.blue),
+                    child: AsulCustomText(
+                      text: 'Name',
+                      fontsize: 18,
+                      fontWeight: FontWeight.w600,
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      'Email',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.blue),
+                    child: AsulCustomText(
+                      text: 'Email',
+                      fontsize: 18,
+                      fontWeight: FontWeight.w600,
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      'Role',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.blue),
+                    child: AsulCustomText(
+                      text: 'Role',
+                      fontsize: 18,
+                      fontWeight: FontWeight.w600,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -314,7 +266,7 @@ class _UserDetailsState extends State<UserDetails> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream:stream,
+                stream: stream,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Error fetching users');
@@ -362,18 +314,21 @@ class _UserDetailsState extends State<UserDetails> {
                                         color: Colors.white),
                               ),
                               Expanded(
-                                child: Text(
-                                  user['name']?.isNotEmpty == true
+                                child: AsulCustomText(
+                                  text: user['name']?.isNotEmpty == true
                                       ? user['name']
                                       : user['name'] ?? '',
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               Expanded(
-                                  child: Text(user['email'] ?? '',
-                                      textAlign: TextAlign.center)),
+                                  child: AsulCustomText(
+                                text: user['email'] ?? '',
+                                textAlign: TextAlign.center,
+                              )),
                               Expanded(
-                                  child: Text(user['role'] ?? '',
+                                  child: AsulCustomText(
+                                      text: user['role'] ?? '',
                                       textAlign: TextAlign.center)),
                               IconButton(
                                 onPressed: () {
@@ -385,7 +340,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   );
                                 },
                                 icon: const Icon(Icons.edit),
-                                color: Colors.blue,
+                                color: primaryColorKom,
                               ),
                               IconButton(
                                 onPressed: () {
