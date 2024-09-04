@@ -1,3 +1,5 @@
+import 'package:admin_panel_komp/colors.dart';
+import 'package:admin_panel_komp/custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   void login() async {
     try {
       // Sign in with email and password
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
@@ -29,7 +32,8 @@ class _LoginPageState extends State<LoginPage> {
       print("Admin UID: $uid");
 
       // Fetch the ID token result to get the custom claims
-      IdTokenResult idTokenResult = await userCredential.user!.getIdTokenResult();
+      IdTokenResult idTokenResult =
+          await userCredential.user!.getIdTokenResult();
 
       // Check if the user has the admin claim
       bool isAdmin = idTokenResult.claims?['admin'] == true;
@@ -65,18 +69,18 @@ class _LoginPageState extends State<LoginPage> {
               height: 130,
               child: Image.asset('assets/images/bglogo.png')),
           const SizedBox(
-            height: 50,
+            height: 30,
           ),
-          const Text(
-            'Login',
-            style: TextStyle(
-                fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
+          const AsulCustomText(
+            fontWeight: FontWeight.w700,
+            fontsize: 20,
+            text: 'Login',
           ),
           const SizedBox(
             height: 20,
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.3,
             height: 50,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -106,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           Align(
             alignment: Alignment.center,
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.6,
+              width: MediaQuery.of(context).size.width * 0.3,
               height: 50,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -149,16 +153,14 @@ class _LoginPageState extends State<LoginPage> {
             height: 30,
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.3,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                const  AsulCustomText(
+                  fontWeight: FontWeight.w700,
+                  fontsize: 20,
+                  text: 'Login',
                 ),
                 Container(
                   width: 50,
@@ -174,11 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   child: IconButton(
-                    onPressed:
-                    login,
+                    onPressed: login,
                     icon: Transform.scale(
                       scale: 0.5,
-                      child: Image.asset('assets/images/arrowIcon.png'),
+                      child: Image.asset('assets/images/arrowIcon.png',color: primaryColorKom,),
                     ),
                   ),
                 ),

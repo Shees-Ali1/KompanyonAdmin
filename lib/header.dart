@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Login_Page.dart';
 import 'colors.dart';
+import 'custom_buuton.dart';
 
 class Header extends StatelessWidget {
   const Header({
@@ -86,24 +87,26 @@ class _ProfileCardState extends State<ProfileCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: secondaryColor,
+          backgroundColor: backgroundColor,
           title: Text('Logout'),
           content: Text('Are you sure you want to logout?'),
           actions: <Widget>[
-            TextButton(
-              child: Text(
-                'No',
-                style: TextStyle(color: Colors.blue),
-              ),
+
+
+            CustomButton(
+              color: Colors.transparent,
+              width: 100,
+              height: 40,
+              text: 'No',
+              textColor: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
-              child: Text(
-                'Yes',
-                style: TextStyle(color: Colors.red),
-              ),
+            CustomButton(
+              width: 100,
+              height: 40,
+              text: 'Yes',
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pop();
@@ -111,7 +114,9 @@ class _ProfileCardState extends State<ProfileCard> {
                   MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
+
             ),
+
           ],
         );
       },
