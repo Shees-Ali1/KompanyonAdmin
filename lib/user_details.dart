@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import 'colors.dart';
 
 class UserDetails extends StatefulWidget {
    UserDetails({super.key});
@@ -14,8 +14,6 @@ class UserDetails extends StatefulWidget {
 class _UserDetailsState extends State<UserDetails> {
   String searchQuery = '';
  late Stream<QuerySnapshot> stream;
-
-
 
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

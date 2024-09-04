@@ -95,9 +95,9 @@ class _AssessmentsState extends State<Assessments> {
             ElevatedButton.icon(
               onPressed: _showAddAssessmentDialog,
               icon: const Icon(Icons.add),
-              label: const Text('Add Assessment'),
+              label:  Text('Add Assessment',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.blue.shade600,
                 padding:
                 const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 textStyle: const TextStyle(fontSize: 16),
@@ -140,10 +140,10 @@ class _AssessmentsState extends State<Assessments> {
                             children: [
                               Text(
                                 assessmentData['question'],
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
-                                  color: Colors.teal,
+                                  color: Colors.blue.shade600,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -250,7 +250,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text('Add New Assessment'),
+      title:  Text('Add New Assessment',style: TextStyle(color: Colors.blue.shade600),),
       content: SingleChildScrollView(
         child: SizedBox(
           height: 400,
@@ -263,7 +263,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                 controller: _questionController,
                 decoration: const InputDecoration(
                   labelText: 'Question',
-                  labelStyle: TextStyle(color: Colors.teal),
+                  labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -280,7 +280,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                       controller: _optionController,
                       decoration: const InputDecoration(
                         labelText: 'Option',
-                        labelStyle: TextStyle(color: Colors.teal),
+                        labelStyle: TextStyle(color: Colors.white),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -288,7 +288,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                   IconButton(
                     onPressed: _addOption,
                     icon: const Icon(Icons.add),
-                    color: Colors.teal,
+                    color: Colors.blue.shade600,
                   ),
                 ],
               ),
@@ -297,7 +297,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                 child: ElevatedButton(
                   onPressed: _addAssessment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: Colors.blue.shade600,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 24),
                     textStyle: const TextStyle(fontSize: 16),
@@ -305,7 +305,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text('Add Assessment'),
+                  child: const Text('Add Assessment',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
               ),
               const SizedBox(height: 16),
@@ -316,6 +316,8 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
     );
   }
 }
+
+
 class EditAssessmentDialog extends StatefulWidget {
   final String assessmentId;
   final TextEditingController questionController;
@@ -331,6 +333,7 @@ class EditAssessmentDialog extends StatefulWidget {
   @override
   State<EditAssessmentDialog> createState() => _EditAssessmentDialogState();
 }
+
 
 class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -381,6 +384,7 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -389,64 +393,68 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
         style: TextStyle(color: Colors.blueAccent),
       ),
       content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: widget.questionController,
-              decoration: InputDecoration(
-                labelText: 'Question',
-                labelStyle: TextStyle(color: Colors.blueAccent.shade700),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent.shade700),
-                  borderRadius: BorderRadius.circular(10),
+        child: Container(
+          height: 400,
+          width: 700,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: widget.questionController,
+                decoration: InputDecoration(
+                  labelText: 'Question',
+                  labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueAccent.shade700),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            ..._optionControllers.asMap().entries.map((entry) {
-              int index = entry.key;
-              TextEditingController optionController = entry.value;
+              const SizedBox(height: 10),
+              ..._optionControllers.asMap().entries.map((entry) {
+                int index = entry.key;
+                TextEditingController optionController = entry.value;
 
-              return Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: optionController,
-                      decoration: InputDecoration(
-                        labelText: 'Option ${index + 1}',
-                        labelStyle: TextStyle(color: Colors.blueAccent.shade700),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blueAccent.shade700),
-                          borderRadius: BorderRadius.circular(10),
+                return Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: optionController,
+                        decoration: InputDecoration(
+                          labelText: 'Option ${index + 1}',
+                          labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blueAccent.shade700),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () => _removeOption(index),
-                    icon: Icon(Icons.delete, color: Colors.redAccent),
+                    IconButton(
+                      onPressed: () => _removeOption(index),
+                      icon: Icon(Icons.delete, color: Colors.redAccent),
+                    ),
+                  ],
+                );
+              }).toList(),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _addOption,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade600,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text('Add Option',style: TextStyle(color: Colors.white),),
                   ),
                 ],
-              );
-            }).toList(),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: _addOption,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent.shade700,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text('Add Option'),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -462,13 +470,13 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
         ElevatedButton(
           onPressed: _updateAssessment,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent.shade700,
+            backgroundColor: Colors.blue.shade600,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          child: const Text('Update Assessment'),
+          child: const Text('Update Assessment',style: TextStyle(color: Colors.white),),
         ),
       ],
     );

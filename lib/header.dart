@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../constants.dart';
 import 'Login_Page.dart';
+import 'colors.dart';
 
 class Header extends StatelessWidget {
   const Header({
@@ -20,19 +20,16 @@ class Header extends StatelessWidget {
         children: [
           if (!Responsive.isDesktop(context))
             IconButton(icon: Icon(Icons.menu), onPressed: () {}
-              // context.read<MenuAppController>().controlMenu,
             ),
           if (!Responsive.isMobile(context))
             Row(
               children: [
                 Text(
-                  "Dashboard",
+                  "Kompanyon",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(width: 30,),
-                IconButton(icon: Icon(Icons.notifications), onPressed: () {
-                  // Get.to(NotificationScreen());
-                })
+
               ],
             ),
 
@@ -94,7 +91,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
@@ -103,13 +100,12 @@ class _ProfileCardState extends State<ProfileCard> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                await FirebaseAuth.instance.signOut(); // Sign out from Firebase
-                Navigator.of(context).pop(); // Dismiss the dialog
-                // Optionally navigate to the login screen or handle the logout logic here
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                       builder: (context) =>
-                          LoginPage()), // Assuming you have a LoginScreen
+                          LoginPage()),
                 );
               },
             ),

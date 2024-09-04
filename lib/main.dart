@@ -1,12 +1,11 @@
 import 'package:admin_panel_komp/Login_Page.dart';
+import 'package:admin_panel_komp/colors.dart';
 import 'package:admin_panel_komp/main_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'constants.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -26,6 +25,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kompanyon Admin',
+
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: bgColor,
         textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme)
