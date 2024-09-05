@@ -30,7 +30,7 @@ class _AssessmentsState extends State<Assessments> {
         return AlertDialog(
           title: const AsulCustomText(text: 'Delete Assessment'),
           content:
-          const Text('Are you sure you want to delete this assessment?'),
+              const Text('Are you sure you want to delete this assessment?'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -67,7 +67,7 @@ class _AssessmentsState extends State<Assessments> {
   void _showEditAssessmentDialog(
       String assessmentId, String question, List<dynamic> options) {
     TextEditingController questionController =
-    TextEditingController(text: question);
+        TextEditingController(text: question);
     List<String> dialogOptions = List.from(options);
 
     showDialog(
@@ -89,15 +89,20 @@ class _AssessmentsState extends State<Assessments> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-
           ElevatedButton.icon(
             onPressed: _showAddAssessmentDialog,
-            icon: const Icon(Icons.add,color: Colors.white,),
-            label:  Text('Add Assessment',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            label: Text(
+              'Add Assessment',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
             style: ElevatedButton.styleFrom(
-              backgroundColor:primaryColorKom,
-              padding:
-              const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+              backgroundColor: primaryColorKom,
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
               textStyle: const TextStyle(fontSize: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -121,10 +126,10 @@ class _AssessmentsState extends State<Assessments> {
                   itemCount: assessments.length,
                   itemBuilder: (context, index) {
                     final assessmentData =
-                    assessments[index].data() as Map<String, dynamic>;
+                        assessments[index].data() as Map<String, dynamic>;
                     final assessmentId = assessments[index].id; // Get the ID
                     final options =
-                    (assessmentData['options'] as List).cast<String>();
+                        (assessmentData['options'] as List).cast<String>();
                     return Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -132,47 +137,56 @@ class _AssessmentsState extends State<Assessments> {
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AsulCustomText(
-                            text:   assessmentData['question'],
-                             fontsize: 20,
+                        child: Theme(
+                    data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,),
+                          child: ExpansionTile(
+                            tilePadding: EdgeInsets.zero,
+                            title: AsulCustomText(
+                              text: assessmentData['question'],
+                              fontsize: 20,
+                              textAlign: TextAlign.left,
                               fontWeight: FontWeight.w500,
+
                             ),
-                            const SizedBox(height: 8),
-                            ...options.map((option) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                '• $option',
-                                style: const TextStyle(fontSize: 16),
+                            children: [
+                              const SizedBox(height: 8),
+                              ...options.map((option) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '• $option',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  )),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      _deleteAssessment(assessmentId);
+                                    },
+                                    icon: const Icon(Icons.delete),
+                                    color: Colors.redAccent,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      _showEditAssessmentDialog(
+                                        assessmentId,
+                                        assessmentData['question'],
+                                        assessmentData['options'],
+                                      );
+                                    },
+                                    icon: const Icon(Icons.edit),
+                                    color: primaryColorKom,
+                                  ),
+                                ],
                               ),
-                            )),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    _deleteAssessment(assessmentId);
-                                  },
-                                  icon: const Icon(Icons.delete),
-                                  color: Colors.redAccent,
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _showEditAssessmentDialog(
-                                      assessmentId,
-                                      assessmentData['question'],
-                                      assessmentData['options'],
-                                    );
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                  color: primaryColorKom,
-                                ),
-                              ],
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -243,7 +257,9 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title:  AsulCustomText(text: 'Add New Assessment',),
+      title: AsulCustomText(
+        text: 'Add New Assessment',
+      ),
       content: SingleChildScrollView(
         child: SizedBox(
           height: 400,
@@ -290,7 +306,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                 child: ElevatedButton(
                   onPressed: _addAssessment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:primaryColorKom,
+                    backgroundColor: primaryColorKom,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 24),
                     textStyle: const TextStyle(fontSize: 16),
@@ -298,7 +314,11 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text('Add Assessment',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child: const Text(
+                    'Add Assessment',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -309,7 +329,6 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
     );
   }
 }
-
 
 class EditAssessmentDialog extends StatefulWidget {
   final String assessmentId;
@@ -326,7 +345,6 @@ class EditAssessmentDialog extends StatefulWidget {
   @override
   State<EditAssessmentDialog> createState() => _EditAssessmentDialogState();
 }
-
 
 class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -354,10 +372,13 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
 
   Future<void> _updateAssessment() async {
     List<String> updatedOptions =
-    _optionControllers.map((controller) => controller.text).toList();
+        _optionControllers.map((controller) => controller.text).toList();
 
     try {
-      await _firestore.collection('assessments').doc(widget.assessmentId).update({
+      await _firestore
+          .collection('assessments')
+          .doc(widget.assessmentId)
+          .update({
         'question': widget.questionController.text,
         'options': updatedOptions,
       });
@@ -377,13 +398,11 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
       title: const AsulCustomText(
-       text:  'Edit Assessment',
-
+        text: 'Edit Assessment',
       ),
       content: SingleChildScrollView(
         child: Container(
@@ -415,9 +434,11 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
                         controller: optionController,
                         decoration: InputDecoration(
                           labelText: 'Option ${index + 1}',
-                          labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+                          labelStyle:
+                              TextStyle(color: Colors.blueAccent.shade700),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blueAccent.shade700),
+                            borderSide:
+                                BorderSide(color: Colors.blueAccent.shade700),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -433,7 +454,12 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  CustomButton(text: 'Add Option', onPressed:_addOption,height: 35,width: 100,)
+                  CustomButton(
+                    text: 'Add Option',
+                    onPressed: _addOption,
+                    height: 35,
+                    width: 100,
+                  )
                 ],
               ),
             ],
@@ -453,13 +479,16 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
         ElevatedButton(
           onPressed: _updateAssessment,
           style: ElevatedButton.styleFrom(
-            backgroundColor:primaryColorKom,
+            backgroundColor: primaryColorKom,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          child: const Text('Update Assessment',style: TextStyle(color: Colors.white),),
+          child: const Text(
+            'Update Assessment',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );
