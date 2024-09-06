@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: backgroundColor,
         canvasColor: secondaryColor,
+
       ),
       getPages: const [],
       unknownRoute: GetPage(

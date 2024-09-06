@@ -1,18 +1,94 @@
-import 'package:flutter/cupertino.dart';
+import 'package:admin_panel_komp/colors.dart';
+import 'package:admin_panel_komp/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Responses extends StatefulWidget {
-  const Responses({super.key});
+class Responses extends StatelessWidget {
+  // Fetch all user responses from the userResponses collection
+  Future<List<Map<String, dynamic>>> fetchAllUserResponses() async {
+    try {
+      // Fetch all documents from the userResponses collection
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('userResponses')
+          .get();
 
-  @override
-  State<Responses> createState() => _ResponsesState();
-}
+      // Convert each document into a map with its ID and responses
+      List<Map<String, dynamic>> allResponses = querySnapshot.docs.map((doc) {
+        return {
+          'id': doc.id, // Document ID (user ID)
+          'responses': doc['responses'] as Map<String, dynamic>, // Responses map
+        };
+      }).toList();
 
-class _ResponsesState extends State<Responses> {
+      return allResponses;
+    } catch (e) {
+      print('Error fetching all user responses: $e');
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orangeAccent,
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        title: AsulCustomText(text: "All User Responses",fontsize: 22,),
+      ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: fetchAllUserResponses(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            // Get the list of all user responses
+            List<Map<String, dynamic>> allResponses = snapshot.data!;
+
+            return ListView.builder(
+              itemCount: allResponses.length,
+              itemBuilder: (context, index) {
+                // Get each user's responses
+                Map<String, dynamic> userResponse = allResponses[index];
+                String userId = userResponse['id'];
+                Map<String, dynamic> responsesMap = userResponse['responses'];
+
+                // Convert responses map to a list of entries
+                List<MapEntry<String, dynamic>> responsesList = responsesMap.entries.toList();
+
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,
+                  ),
+                  child: ExpansionTile(
+                    
+                    title: AsulCustomText(text: "User ID: $userId"),
+                    children: responsesList.map((entry) {
+                      String key = entry.key;
+                      dynamic value = entry.value;
+                  
+                      // Handle if value is a list or a single item
+                      String displayValue;
+                      if (value is List) {
+                        displayValue = value.join(", ");
+                      } else {
+                        displayValue = value.toString();
+                      }
+                  
+                      return ListTile(
+                        leading: Text(key),
+                        title: Text(displayValue),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center(child: Text("No user responses found"));
+          }
+        },
+      ),
     );
   }
 }

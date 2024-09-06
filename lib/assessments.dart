@@ -139,8 +139,10 @@ class _AssessmentsState extends State<Assessments> {
                         padding: const EdgeInsets.all(16.0),
                         child: Theme(
                     data: Theme.of(context).copyWith(
-                    dividerColor: Colors.transparent,),
+                    dividerColor: Colors.transparent,
+                    ),
                           child: ExpansionTile(
+
                             tilePadding: EdgeInsets.zero,
                             title: AsulCustomText(
                               text: assessmentData['question'],
@@ -285,6 +287,7 @@ class _AddAssessmentDialogState extends State<AddAssessmentDialog> {
               Row(
                 children: [
                   Expanded(
+
                     child: TextField(
                       controller: _optionController,
                       decoration: const InputDecoration(
@@ -406,7 +409,7 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
       ),
       content: SingleChildScrollView(
         child: Container(
-          height: 400,
+          height: 500,
           width: 700,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -423,27 +426,32 @@ class _EditAssessmentDialogState extends State<EditAssessmentDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               ..._optionControllers.asMap().entries.map((entry) {
                 int index = entry.key;
                 TextEditingController optionController = entry.value;
                 return Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: optionController,
-                        decoration: InputDecoration(
-                          labelText: 'Option ${index + 1}',
-                          labelStyle:
-                              TextStyle(color: Colors.blueAccent.shade700),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.blueAccent.shade700),
-                            borderRadius: BorderRadius.circular(10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: optionController,
+                          decoration: InputDecoration(
+                            labelText: 'Option ${index + 1}',
+                            labelStyle:
+                                TextStyle(color: Colors.blueAccent.shade700),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blueAccent.shade700),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                       ),
+
                     ),
+                    const SizedBox(height: 20),
                     IconButton(
                       onPressed: () => _removeOption(index),
                       icon: Icon(Icons.delete, color: Colors.redAccent),
