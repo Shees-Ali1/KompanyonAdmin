@@ -23,17 +23,3 @@ const containerBorder = Color(0xffE0E0E0);
 
 
 
-//  Future<void> _createLiteratureCollection() async {
-//     final firestore = FirebaseFirestore.instance;
-//     final literatureCollection = firestore.collection('literature');
-
-//     final literatureData = {
-//       'title': 'Sample Literature Title',
-//       'author': 'Sample Author',
-//       'publishedDate': Timestamp.now(),
-//     };
-
-//     await literatureCollection.add(literatureData);
-
-//     print('Document added to the "literature" collection.');
-//   }
