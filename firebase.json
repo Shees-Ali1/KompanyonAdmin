@@ -1,1 +1,22 @@
-{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"kompanyonapp-c60f8","configurations":{"web":"1:552938282575:web:08d8cd038e9b740f6d943a"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "kompanyonapp-c60f8",
+          "configurations": {
+            "web": "1:552938282575:web:08d8cd038e9b740f6d943a"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
