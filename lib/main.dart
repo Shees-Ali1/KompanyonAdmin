@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Kompanyon Admin',
+      title: ' Admin',
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: backgroundColor,
         canvasColor: secondaryColor,
