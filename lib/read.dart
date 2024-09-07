@@ -1,8 +1,10 @@
 import 'package:admin_panel_komp/colors.dart';
 import 'package:admin_panel_komp/custom_buuton.dart';
 import 'package:admin_panel_komp/custom_text.dart';
+import 'package:admin_panel_komp/sidebar_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Read extends StatefulWidget {
   const Read({super.key});
@@ -52,6 +54,7 @@ class _ReadState extends State<Read> {
       );
     }
   }
+  final SidebarController sidebarController =Get.put(SidebarController());
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,12 @@ class _ReadState extends State<Read> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Get.width<768?  GestureDetector(
+                  onTap: () {
+                    sidebarController.showsidebar.value =true;
+                  },
+                  child: Icon(Icons.dehaze)):SizedBox.shrink(),
+              SizedBox(height: 20,),
               const AsulCustomText(
                 text: 'Add New Article',
                 fontsize: 24,

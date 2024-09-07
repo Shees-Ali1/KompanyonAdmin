@@ -1,8 +1,10 @@
 import 'package:admin_panel_komp/colors.dart';
 import 'package:admin_panel_komp/custom_buuton.dart';
 import 'package:admin_panel_komp/custom_text.dart';
+import 'package:admin_panel_komp/sidebar_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Assessments extends StatefulWidget {
   const Assessments({super.key});
@@ -82,122 +84,150 @@ class _AssessmentsState extends State<Assessments> {
     );
   }
 
+  final SidebarController sidebarController =Get.put(SidebarController());
+
   @override
   Widget build(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+
+
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _showAddAssessmentDialog,
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            label: Text(
-              'Add Assessment',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColorKom,
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-              textStyle: const TextStyle(fontSize: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: width<380?5:width < 425
+              ? 15 // You can specify the width for widths less than 425
+              : width < 768
+              ? 20 // You can specify the width for widths less than 768
+              : width < 1024
+              ? 70 // You can specify the width for widths less than 1024
+              : width <= 1440
+              ? 60
+              : width > 1440 && width <= 2550
+              ? 60
+              : 80,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 15),
+
+            Get.width<768?  GestureDetector(
+                onTap: () {
+                  sidebarController.showsidebar.value =true;
+                },
+                child: Icon(Icons.dehaze)):SizedBox.shrink(),
+            const SizedBox(height: 25),
+            ElevatedButton.icon(
+              onPressed: _showAddAssessmentDialog,
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Add Assessment',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColorKom,
+                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                textStyle: const TextStyle(fontSize: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('assessments').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Error fetching assessments');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            const SizedBox(height: 16),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection('assessments').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Error fetching assessments');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                final assessments = snapshot.data!.docs;
-                return ListView.builder(
-                  itemCount: assessments.length,
-                  itemBuilder: (context, index) {
-                    final assessmentData =
-                        assessments[index].data() as Map<String, dynamic>;
-                    final assessmentId = assessments[index].id; // Get the ID
-                    final options =
-                        (assessmentData['options'] as List).cast<String>();
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  final assessments = snapshot.data!.docs;
+                  return ListView.builder(
+                    itemCount: assessments.length,
+                    itemBuilder: (context, index) {
+                      final assessmentData =
+                          assessments[index].data() as Map<String, dynamic>;
+                      final assessmentId = assessments[index].id; // Get the ID
+                      final options =
+                          (assessmentData['options'] as List).cast<String>();
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Theme(
+                      data: Theme.of(context).copyWith(
+                      dividerColor: Colors.transparent,
                       ),
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Theme(
-                    data: Theme.of(context).copyWith(
-                    dividerColor: Colors.transparent,
-                    ),
-                          child: ExpansionTile(
+                            child: ExpansionTile(
 
-                            tilePadding: EdgeInsets.zero,
-                            title: AsulCustomText(
-                              text: assessmentData['question'],
-                              fontsize: 20,
-                              textAlign: TextAlign.left,
-                              fontWeight: FontWeight.w500,
+                              tilePadding: EdgeInsets.zero,
+                              title: AsulCustomText(
+                                text: assessmentData['question'],
+                                fontsize: 20,
+                                textAlign: TextAlign.left,
+                                fontWeight: FontWeight.w500,
 
-                            ),
-                            children: [
-                              const SizedBox(height: 8),
-                              ...options.map((option) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        '• $option',
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  )),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      _deleteAssessment(assessmentId);
-                                    },
-                                    icon: const Icon(Icons.delete),
-                                    color: Colors.redAccent,
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _showEditAssessmentDialog(
-                                        assessmentId,
-                                        assessmentData['question'],
-                                        assessmentData['options'],
-                                      );
-                                    },
-                                    icon: const Icon(Icons.edit),
-                                    color: primaryColorKom,
-                                  ),
-                                ],
                               ),
-                            ],
+                              children: [
+                                const SizedBox(height: 8),
+                                ...options.map((option) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          '• $option',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                    )),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        _deleteAssessment(assessmentId);
+                                      },
+                                      icon: const Icon(Icons.delete),
+                                      color: Colors.redAccent,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _showEditAssessmentDialog(
+                                          assessmentId,
+                                          assessmentData['question'],
+                                          assessmentData['options'],
+                                        );
+                                      },
+                                      icon: const Icon(Icons.edit),
+                                      color: primaryColorKom,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

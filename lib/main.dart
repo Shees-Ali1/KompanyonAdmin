@@ -1,6 +1,7 @@
 import 'package:admin_panel_komp/Login_Page.dart';
 import 'package:admin_panel_komp/colors.dart';
 import 'package:admin_panel_komp/main_dashboard.dart';
+import 'package:admin_panel_komp/sidebar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         name: '/home',
         page: () => FirebaseAuth.instance.currentUser == null
             ? const LoginPage()
-            : const MainDashboard(),
+            : const HomeMain(),
         binding: BindingsBuilder(() {
           Get.lazyPut(() => UserController());
         }),
