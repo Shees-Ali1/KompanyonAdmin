@@ -4,6 +4,7 @@ import 'package:admin_panel_komp/custom_text.dart';
 import 'package:admin_panel_komp/sidebar_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class Assessments extends StatefulWidget {
@@ -116,7 +117,10 @@ class _AssessmentsState extends State<Assessments> {
                 onTap: () {
                   sidebarController.showsidebar.value =true;
                 },
-                child: Icon(Icons.dehaze)):SizedBox.shrink(),
+              child:SvgPicture.asset('assets/images/drawernavigation.svg',color: primaryColorKom,),
+
+            )
+                :SizedBox.shrink(),
             const SizedBox(height: 25),
             ElevatedButton.icon(
               onPressed: _showAddAssessmentDialog,

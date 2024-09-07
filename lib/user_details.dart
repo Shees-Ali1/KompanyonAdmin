@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'colors.dart';
 import 'custom_buuton.dart';
@@ -223,7 +224,7 @@ class _UserDetailsState extends State<UserDetails> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10, top: 10),
-                      child: Icon(Icons.dehaze),
+                      child:SvgPicture.asset('assets/images/drawernavigation.svg',color: primaryColorKom,),
                     ))
                 : SizedBox.shrink(),
             SizedBox(
