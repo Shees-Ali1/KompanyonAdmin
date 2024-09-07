@@ -185,6 +185,7 @@ class _ReadState extends State<Read> {
 
                   final articles = snapshot.data!.docs;
                   return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: articles.length,
                     itemBuilder: (context, index) {

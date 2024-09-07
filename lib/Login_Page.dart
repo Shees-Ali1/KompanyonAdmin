@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Container(
           width: width < 425
-              ? 250 // You can specify the width for widths less than 425
+              ? 280 // You can specify the width for widths less than 425
               : width < 768
               ? 300 // You can specify the width for widths less than 768
               : width <= 1440
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
           child: Container(
             width:width < 425
-                ? 250 // You can specify the width for widths less than 425
+                ? 280 // You can specify the width for widths less than 425
                 : width < 768
                 ? 300 // You can specify the width for widths less than 768
                 : width <= 1440
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
               text: 'Login',
             ),
             SizedBox(width: width < 425
-                ? 140 // You can specify the width for widths less than 425
+                ? 170 // You can specify the width for widths less than 425
                 : width < 768
                 ? 190 // You can specify the width for widths less than 768
                 : width <= 1440

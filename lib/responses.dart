@@ -12,14 +12,14 @@ class Responses extends StatelessWidget {
     try {
       // Fetch all documents from the userResponses collection
       QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('userResponses').get();
+      await FirebaseFirestore.instance.collection('userResponses').get();
 
       // Convert each document into a map with its ID and responses
       List<Map<String, dynamic>> allResponses = querySnapshot.docs.map((doc) {
         return {
           'id': doc.id, // Document ID (user ID)
           'responses':
-              doc['responses'] as Map<String, dynamic>, // Responses map
+          doc['responses'] as Map<String, dynamic>, // Responses map
         };
       }).toList();
 
@@ -37,51 +37,48 @@ class Responses extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: width < 380
-                ? 5
-                : width < 425
-                    ? 15 // You can specify the width for widths less than 425
-                    : width < 768
-                        ? 20 // You can specify the width for widths less than 768
-                        : width < 1024
-                            ? 70 // You can specify the width for widths less than 1024
-                            : width <= 1440
-                                ? 60
-                                : width > 1440 && width <= 2550
-                                    ? 60
-                                    : 80,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 15),
-              Get.width < 768
-                  ? GestureDetector(
-                      onTap: () {
-                        sidebarController.showsidebar.value = true;
-                      },
-                      child: SvgPicture.asset(
-                        'assets/images/drawernavigation.svg',
-                        color: primaryColorKom,
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              SizedBox(
-                height: 20,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: width < 380
+              ? 5
+              : width < 425
+              ? 15 // You can specify the width for widths less than 425
+              : width < 768
+              ? 20 // You can specify the width for widths less than 768
+              : width < 1024
+              ? 70 // You can specify the width for widths less than 1024
+              : width <= 1440
+              ? 60
+              : width > 1440 && width <= 2550
+              ? 60
+              : 80,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 15),
+            if (Get.width < 768)
+              GestureDetector(
+                onTap: () {
+                  sidebarController.showsidebar.value = true;
+                },
+                child: SvgPicture.asset(
+                  'assets/images/drawernavigation.svg',
+                  color: primaryColorKom,
+                ),
               ),
-              AsulCustomText(
-                text: "All User Responses",
-                fontsize: 22,
-              ),
-              const SizedBox(height: 25),
-              FutureBuilder<List<Map<String, dynamic>>>(
+            const SizedBox(height: 20),
+            AsulCustomText(
+              text: "All User Responses",
+              fontsize: 22,
+            ),
+            const SizedBox(height: 25),
+            Expanded( // Expanded widget to manage layout constraints
+              child: FutureBuilder<List<Map<String, dynamic>>>(
                 future: fetchAllUserResponses(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -89,19 +86,17 @@ class Responses extends StatelessWidget {
                     List<Map<String, dynamic>> allResponses = snapshot.data!;
 
                     return ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
                       itemCount: allResponses.length,
                       itemBuilder: (context, index) {
                         // Get each user's responses
                         Map<String, dynamic> userResponse = allResponses[index];
                         String userId = userResponse['id'];
                         Map<String, dynamic> responsesMap =
-                            userResponse['responses'];
+                        userResponse['responses'];
 
                         // Convert responses map to a list of entries
                         List<MapEntry<String, dynamic>> responsesList =
-                            responsesMap.entries.toList();
+                        responsesMap.entries.toList();
 
                         return Theme(
                           data: Theme.of(context).copyWith(
@@ -131,12 +126,12 @@ class Responses extends StatelessWidget {
                       },
                     );
                   } else {
-                    return Center(child: Text("No user responses found"));
+                    return const Center(child: Text("No user responses found"));
                   }
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
