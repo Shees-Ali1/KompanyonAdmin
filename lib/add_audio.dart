@@ -1,9 +1,15 @@
 import 'dart:typed_data';
 import 'dart:html' as html; // For web file handling
+import 'package:admin_panel_komp/sidebar_controller.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+
+import 'colors.dart';
+import 'custom_text.dart';
 
 class AddAudio extends StatefulWidget {
   const AddAudio({super.key});
@@ -15,6 +21,7 @@ class AddAudio extends StatefulWidget {
 class _AddAudioState extends State<AddAudio> {
   bool _isUploading = false;
   String? _uploadStatus;
+  final SidebarController sidebarController =Get.put(SidebarController());
 
   String? _category; // To store category input
   String? _duration; // To store duration input
@@ -87,61 +94,125 @@ class _AddAudioState extends State<AddAudio> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Audio"),
-      ),
+
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Input fields for category, duration, and title
-            TextField(
-              decoration: const InputDecoration(labelText: 'Category'),
-              onChanged: (value) {
-                setState(() {
-                  _category = value;
-                });
-              },
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Duration'),
-              onChanged: (value) {
-                setState(() {
-                  _duration = value;
-                });
-              },
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Title'),
-              onChanged: (value) {
-                setState(() {
-                  _title = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _isUploading ? null : uploadAudio,
-              icon: const Icon(Icons.upload_file),
-              label: const Text("Upload Audio"),
-            ),
-            if (_isUploading) const CircularProgressIndicator(),
-            if (_uploadStatus != null) ...[
+        padding: EdgeInsets.symmetric(
+          horizontal: width<380?5:width < 425
+              ? 15 // You can specify the width for widths less than 425
+              : width < 768
+              ? 20 // You can specify the width for widths less than 768
+              : width < 1024
+              ? 70 // You can specify the width for widths less than 1024
+              : width <= 1440
+              ? 60
+              : width > 1440 && width <= 2550
+              ? 60
+              : 80,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 35),
+
+              Get.width<768?  GestureDetector(
+                onTap: () {
+                  sidebarController.showsidebar.value =true;
+                },
+                child:SvgPicture.asset('assets/images/drawernavigation.svg',color: primaryColorKom,),
+
+              ):SizedBox.shrink(),
+              SizedBox(height: 20,),
+              const AsulCustomText(
+                text: 'Add Audio',
+                fontsize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 25),              buildTextField(
+                label: 'Category',
+                onChanged: (value) => setState(() => _category = value),
+              ),
+              buildTextField(
+                label: 'Duration',
+                onChanged: (value) => setState(() => _duration = value),
+              ),
+              buildTextField(
+                label: 'Title',
+                onChanged: (value) => setState(() => _title = value),
+              ),
               const SizedBox(height: 20),
-              Text(
-                _uploadStatus!,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: _uploadStatus!.contains("Error")
-                      ? Colors.red
-                      : Colors.green,
+
+              SizedBox(
+                width: 180,
+                child: ElevatedButton.icon(
+                  onPressed: _isUploading ? null : uploadAudio,
+                  icon: const Icon(Icons.upload_file,color: Colors.white,),
+                  label: const Text("Upload Audio",style: TextStyle( color: Colors.white,fontSize: 14),),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColorKom,
+                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 ),
               ),
+              if (_isUploading) const SizedBox(height: 20),
+              if (_isUploading)
+                Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3.0, // Smaller stroke width for a smaller, more elegant loader
+                  ),
+                ),
+              if (_uploadStatus != null) ...[
+                const SizedBox(height: 20),
+                Text(
+                  _uploadStatus!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _uploadStatus!.contains("Error")
+                        ? Colors.red
+                        : Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // A helper function to create text fields with consistent styling
+  Widget buildTextField({
+    required String label,
+    required Function(String) onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: SizedBox(
+        width: 700,
+        child: TextField(
+
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: primaryColorKom),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: primaryColorKom),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColorKom),
+            ),
+            // filled: true,
+            // fillColor: Colors.grey[200],
+          ),
         ),
       ),
     );
