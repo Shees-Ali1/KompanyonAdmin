@@ -149,24 +149,27 @@ class _AddAudioState extends State<AddAudio> {
                 width: 180,
                 child: ElevatedButton.icon(
                   onPressed: _isUploading ? null : uploadAudio,
-                  icon: const Icon(Icons.upload_file,color: Colors.white,),
-                  label: const Text("Upload Audio",style: TextStyle( color: Colors.white,fontSize: 14),),
+                  icon: const Icon(Icons.upload_file, color: Colors.white),
+                  label: const Text(
+                    "Upload Audio",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColorKom,
-                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
               ),
-              if (_isUploading) const SizedBox(height: 20),
               if (_isUploading)
-                Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3.0, // Smaller stroke width for a smaller, more elegant loader
-                  ),
+                const SizedBox(height: 20),
+              if (_isUploading)
+                CircularProgressIndicator(
+                  strokeWidth: 3.0, // Smaller stroke width for a more elegant loader
                 ),
+
               if (_uploadStatus != null) ...[
                 const SizedBox(height: 20),
                 Text(
