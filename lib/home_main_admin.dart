@@ -167,7 +167,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
               SidebarXItem(
                   onTap: () {
                     sidebarController.selectedindex.value = 0;
-                    // setNameProvider.setName('Home');
+
                   },
                   iconBuilder: (selected, hovered) {
                     return Icon(
@@ -180,7 +180,6 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                   onTap: () {
                     sidebarController.selectedindex.value = 1;
 
-                    // setNameProvider.setName('Diary');
                   },
                   iconBuilder: (selected, hovered) {
                     return Icon(
@@ -193,7 +192,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                   onTap: () {
                     sidebarController.selectedindex.value = 2;
 
-                    // setNameProvider.setName('Previous Bookings');
+
                   },
                   iconBuilder: (selected, hovered) {
                     return Icon(
@@ -217,6 +216,20 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                   label: 'Responses'),
               SidebarXItem(
                   onTap: () {
+                    sidebarController.selectedindex.value =
+                    4;
+
+                    // setNameProvider.setName('Profile');
+                  },
+                  iconBuilder: (selected, hovered) {
+                    return Icon(
+                      Icons.home,
+                      color: Colors.transparent,
+                    );
+                  },
+                  label: 'Add Audio'),
+              SidebarXItem(
+                  onTap: () {
                     sidebarController.selectedindex.value = 0;
                     sidebarController.controller =SidebarXController(selectedIndex: 0, extended: true);sidebarController.update();
                     //
@@ -230,6 +243,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                     );
                   },
                   label: 'Log out'),
+
             ],
           );
         });

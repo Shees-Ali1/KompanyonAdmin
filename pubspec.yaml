@@ -50,6 +50,8 @@ dependencies:
   intl:
   sidebarx: ^0.17.1
   flutter_svg:
+  file_picker:
+  just_audio:
 
 
 

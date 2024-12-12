@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'add_audio.dart';
 import 'assessments.dart';
 import 'home_main_admin.dart';
 
@@ -42,7 +43,9 @@ class _HomeMainState extends State<HomeMain> {
                         ? Assessments()
                         : sidebarController.selectedindex.value == 2
                         ? Read()
-                        : Responses()))
+                        : sidebarController.selectedindex.value == 3
+                        ? Responses()
+                        : AddAudio()))
               ],
             ),
             Obx(()=>sidebarController.showsidebar.value == true? ExampleSidebarX():SizedBox.shrink(),)
