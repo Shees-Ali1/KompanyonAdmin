@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import 'colors.dart';
-import 'custom_text.dart';
+import '../widgets/colors.dart';
+import '../widgets/custom_text.dart';
 
 class AddAudio extends StatefulWidget {
   const AddAudio({super.key});

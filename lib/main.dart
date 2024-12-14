@@ -1,5 +1,5 @@
 import 'package:admin_panel_komp/Login_Page.dart';
-import 'package:admin_panel_komp/colors.dart';
+import 'package:admin_panel_komp/widgets/colors.dart';
 import 'package:admin_panel_komp/sidebar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

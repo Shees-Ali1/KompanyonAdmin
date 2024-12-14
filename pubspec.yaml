@@ -52,6 +52,8 @@ dependencies:
   flutter_svg:
   file_picker:
   just_audio:
+  googleapis:
+  googleapis_auth:
 
 
 

@@ -1,4 +1,4 @@
-import 'package:admin_panel_komp/colors.dart';
+import 'package:admin_panel_komp/widgets/colors.dart';
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {

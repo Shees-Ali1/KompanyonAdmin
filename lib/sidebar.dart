@@ -1,15 +1,16 @@
 import 'dart:io';
-import 'package:admin_panel_komp/read.dart';
-import 'package:admin_panel_komp/responses.dart';
+import 'package:admin_panel_komp/tabs/notifications.dart';
+import 'package:admin_panel_komp/tabs/read.dart';
+import 'package:admin_panel_komp/tabs/responses.dart';
 import 'package:admin_panel_komp/sidebar_controller.dart';
-import 'package:admin_panel_komp/user_details.dart';
+import 'package:admin_panel_komp/tabs/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'add_audio.dart';
-import 'assessments.dart';
+import 'tabs/add_audio.dart';
+import 'tabs/assessments.dart';
 import 'home_main_admin.dart';
 
 class HomeMain extends StatefulWidget {
@@ -45,7 +46,9 @@ class _HomeMainState extends State<HomeMain> {
                         ? Read()
                         : sidebarController.selectedindex.value == 3
                         ? Responses()
-                        : AddAudio()))
+                        : sidebarController.selectedindex.value == 4
+                        ? AddAudio()
+                        : Notifications()))
               ],
             ),
             Obx(()=>sidebarController.showsidebar.value == true? ExampleSidebarX():SizedBox.shrink(),)

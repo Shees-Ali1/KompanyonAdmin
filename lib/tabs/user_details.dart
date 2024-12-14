@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'colors.dart';
-import 'custom_buuton.dart';
-import 'custom_search.dart';
-import 'custom_text.dart';
+import '../widgets/colors.dart';
+import '../widgets/custom_buuton.dart';
+import '../widgets/custom_search.dart';
+import '../widgets/custom_text.dart';
 
 class UserDetails extends StatefulWidget {
   UserDetails({super.key});

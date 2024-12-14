@@ -1,5 +1,5 @@
-import 'package:admin_panel_komp/colors.dart';
-import 'package:admin_panel_komp/custom_text.dart';
+import 'package:admin_panel_komp/widgets/colors.dart';
+import 'package:admin_panel_komp/widgets/custom_text.dart';
 import 'package:admin_panel_komp/sidebar_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

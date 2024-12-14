@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import 'Login_Page.dart';
-import 'colors.dart';
-import 'custom_buuton.dart';
+import 'widgets/colors.dart';
+import 'widgets/custom_buuton.dart';
 
 class ExampleSidebarX extends StatefulWidget {
   @override
@@ -228,6 +228,20 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                     );
                   },
                   label: 'Add Audio'),
+              SidebarXItem(
+                  onTap: () {
+                    sidebarController.selectedindex.value =
+                    5;
+
+                    // setNameProvider.setName('Profile');
+                  },
+                  iconBuilder: (selected, hovered) {
+                    return Icon(
+                      Icons.home,
+                      color: Colors.transparent,
+                    );
+                  },
+                  label: 'Notifications'),
               SidebarXItem(
                   onTap: () {
                     sidebarController.selectedindex.value = 0;
