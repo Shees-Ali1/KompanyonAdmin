@@ -54,7 +54,7 @@ class _NotificationsState extends State<Notifications> {
         "timestamp": FieldValue.serverTimestamp(),
       });
 
-      await notificationVM.sendNotificationtoAll("", "");
+      await notificationVM.sendNotificationtoAll(title, message);
 
       Get.snackbar(
         "Success",
