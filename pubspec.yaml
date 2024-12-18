@@ -54,7 +54,9 @@ dependencies:
   just_audio:
   googleapis:
   googleapis_auth:
-
+  csv:
+  path_provider:
+  printing:
 
 
 dev_dependencies:

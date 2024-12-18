@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import '../sidebar_controller.dart';
 import '../widgets/colors.dart';
 import '../widgets/custom_text.dart';
