@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:admin_panel_komp/tabs/challenges.dart';
+import 'package:admin_panel_komp/tabs/help.dart';
 import 'package:admin_panel_komp/tabs/notifications.dart';
 import 'package:admin_panel_komp/tabs/read.dart';
 import 'package:admin_panel_komp/tabs/responses.dart';
@@ -48,7 +50,11 @@ class _HomeMainState extends State<HomeMain> {
                         ? Responses()
                         : sidebarController.selectedindex.value == 4
                         ? AddAudio()
-                        : Notifications()))
+                        : sidebarController.selectedindex.value == 5
+                        ? Notifications()
+                        : sidebarController.selectedindex.value == 6
+                        ? Help()
+                        : Challenges()))
               ],
             ),
             Obx(()=>sidebarController.showsidebar.value == true? ExampleSidebarX():SizedBox.shrink(),)

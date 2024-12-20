@@ -244,6 +244,34 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                   label: 'Notifications'),
               SidebarXItem(
                   onTap: () {
+                    sidebarController.selectedindex.value =
+                    6;
+
+                    // setNameProvider.setName('Profile');
+                  },
+                  iconBuilder: (selected, hovered) {
+                    return Icon(
+                      Icons.home,
+                      color: Colors.transparent,
+                    );
+                  },
+                  label: 'Help'),
+              SidebarXItem(
+                  onTap: () {
+                    sidebarController.selectedindex.value =
+                    7;
+
+                    // setNameProvider.setName('Profile');
+                  },
+                  iconBuilder: (selected, hovered) {
+                    return Icon(
+                      Icons.home,
+                      color: Colors.transparent,
+                    );
+                  },
+                  label: 'Challenges'),
+              SidebarXItem(
+                  onTap: () {
                     sidebarController.selectedindex.value = 0;
                     sidebarController.controller =SidebarXController(selectedIndex: 0, extended: true);sidebarController.update();
                     //
