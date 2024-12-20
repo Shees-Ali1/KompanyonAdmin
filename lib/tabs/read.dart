@@ -55,7 +55,8 @@ class _ReadState extends State<Read> {
       );
     }
   }
-  final SidebarController sidebarController =Get.put(SidebarController());
+
+  final SidebarController sidebarController = Get.put(SidebarController());
 
   @override
   Widget build(BuildContext context) {
@@ -65,31 +66,38 @@ class _ReadState extends State<Read> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: width<380?5:width < 425
-                ? 15 // You can specify the width for widths less than 425
-                : width < 768
-                ? 20 // You can specify the width for widths less than 768
-                : width < 1024
-                ? 70 // You can specify the width for widths less than 1024
-                : width <= 1440
-                ? 60
-                : width > 1440 && width <= 2550
-                ? 60
-                : 80,
+            horizontal: width < 380
+                ? 5
+                : width < 425
+                    ? 15 // You can specify the width for widths less than 425
+                    : width < 768
+                        ? 20 // You can specify the width for widths less than 768
+                        : width < 1024
+                            ? 70 // You can specify the width for widths less than 1024
+                            : width <= 1440
+                                ? 60
+                                : width > 1440 && width <= 2550
+                                    ? 60
+                                    : 80,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 15),
-
-              Get.width<768?  GestureDetector(
-                  onTap: () {
-                    sidebarController.showsidebar.value =true;
-                  },
-                child:SvgPicture.asset('assets/images/drawernavigation.svg',color: primaryColorKom,),
-
-              ):SizedBox.shrink(),
-              SizedBox(height: 20,),
+              Get.width < 768
+                  ? GestureDetector(
+                      onTap: () {
+                        sidebarController.showsidebar.value = true;
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/drawernavigation.svg',
+                        color: primaryColorKom,
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 20,
+              ),
               const AsulCustomText(
                 text: 'Add New Article',
                 fontsize: 24,
@@ -190,7 +198,8 @@ class _ReadState extends State<Read> {
                     itemCount: articles.length,
                     itemBuilder: (context, index) {
                       final articleData =
-                      articles[index].data() as Map<String, dynamic>;
+                          articles[index].data() as Map<String, dynamic>;
+
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -223,52 +232,112 @@ class _ReadState extends State<Read> {
                                 ),
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      articleData['title'],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            articleData['title'],
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            articleData['headline'],
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      articleData['headline'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          articleData['content'],
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ArticleDetails(
-                                                      articleData: articleData,
-                                                    ),
+                                    PopupMenuButton(
+                                      onSelected: (value) async {
+                                        if (value == 'delete') {
+                                          try {
+                                            await _firestore
+                                                .collection('articles')
+                                                .doc(articles[index].id)
+                                                .delete();
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Article deleted successfully'),
                                               ),
                                             );
-                                          },
-                                          child: const Text('Read More...',style: TextStyle(color: primaryColor),),
+                                          } catch (e) {
+                                            print('Error deleting article: $e');
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Error deleting article'),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                        const PopupMenuItem(
+                                          value: 'delete',
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.delete, color: Colors.redAccent), // Add a red delete icon
+                                              const SizedBox(width: 8), // Add spacing between the icon and the text
+                                              Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                  color: Colors.redAccent, // Match the icon color
+                                                  fontWeight: FontWeight.bold, // Bold text for emphasis
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
+
                                       ],
+                                      icon: const Icon(Icons.more_vert),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      articleData['content'],
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ArticleDetails(
+                                              articleData: articleData,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Read More...',
+                                        style: TextStyle(color: primaryColor),
+                                      ),
                                     ),
                                   ],
                                 ),
